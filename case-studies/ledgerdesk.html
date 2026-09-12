@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LedgerDesk case study — Cynthia Owolabi</title>
+    <meta
+      name="description"
+      content="Engineering decisions, failure recovery, evidence and limitations in LedgerDesk."
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" href="../favicon.ico" />
+    <link
+      rel="canonical"
+      href="https://adebolaowolabi32.github.io/case-studies/ledgerdesk.html"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="../index.html">CO<span>.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="../index.html#projects">All projects</a
+        ><a href="../Cynthia_Owolabi_Resume.pdf">CV</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap case">
+      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <h1>LedgerDesk</h1>
+      <div class="project-links">
+        <a href="https://adebolaowolabi32.github.io/payment-operations-console/"
+          >Try demo ↗</a
+        ><a
+          href="https://github.com/adebolaowolabi32/payment-operations-console"
+          >Source code ↗</a
+        >
+      </div>
+      <img
+        src="../img/ledgerdesk.png"
+        alt="LedgerDesk interactive workspace"
+        width="1440"
+        height="1080"
+      />
+      <p class="lede">
+        A provider can accept a payment and lose the response. Treating that
+        timeout as a failure risks paying twice; treating it as success invents
+        certainty.
+      </p>
+      <h2>Problem and constraints</h2>
+      <p>
+        LedgerDesk models an operations team creating, independently approving
+        and tracking payments. The backend must preserve organization
+        boundaries, survive worker crashes and keep an inspectable history. Its
+        public preview is a synthetic browser demo; PostgreSQL workers and the
+        HTTP provider run locally.
+      </p>
+      <h2>The central decision: preserve uncertainty</h2>
+      <p>
+        Approval commits the payment change, audit event and due job in one
+        PostgreSQL transaction. Workers claim with
+        <code>FOR UPDATE SKIP LOCKED</code> and perform network calls outside
+        the transaction. An ambiguous provider response moves the payment into
+        reconciliation.
+      </p>
+      <ol>
+        <li>The provider accepts the transfer and persists its receipt.</li>
+        <li>
+          The response times out. The worker records an uncertain outcome.
+        </li>
+        <li>
+          A subsequent worker looks up the original transfer before submitting
+          again.
+        </li>
+        <li>
+          An authoritative missing result permits another submit using the same
+          provider idempotency key. An existing receipt confirms the original
+          payment.
+        </li>
+      </ol>
+      <h2>Why the boundaries matter</h2>
+      <p>
+        Blind retries cannot distinguish a lost response from a rejected
+        payment. A local lease alone also cannot prevent an old worker from
+        completing a remote call. LedgerDesk combines owner/version/expiry
+        checks for local writes with stable provider idempotency keys for remote
+        submission. It offers durable state and reconciliation, without claiming
+        exactly-once network delivery.
+      </p>
+      <p>
+        Expired claims enter reconciliation even when the interrupted worker
+        never recorded an outcome. Signed callbacks verify original request
+        bytes and deduplicate event IDs; stale events cannot overwrite a
+        terminal result.
+      </p>
+      <h2>Try the failure in two minutes</h2>
+      <p>
+        Open the demo and enter the operations workspace. Under System health,
+        set Simulator behavior to the acceptance-timeout option. Open Approvals,
+        select the pending Atlas Logistics payment (INV-2026-1040) and approve
+        it. Its state moves through Confirming outcome to Paid, and its history
+        shows the lookup. For actual network evidence, run the repository’s
+        provider integration test using the installation guide below.
+      </p>
+      <h2>Evidence</h2>
+      <ul>
+        <li>
+          <a
+            href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/tests/provider.test.ts"
+            >Provider restart test</a
+          >: HTTP acceptance timeout followed by restart reconciles to one
+          durable transfer.
+        </li>
+        <li>
+          <a
+            href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/tests/domain.test.ts"
+            >Domain tests</a
+          >: concurrent claims, expired leases, stale completions, independent
+          approval and transactional rollback.
+        </li>
+        <li>
+          <a
+            href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/tests/telemetry.test.ts"
+            >Trace continuity</a
+          >: approval, timeout and reconciliation retain a shared trace.
+        </li>
+        <li>
+          <a
+            href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/docs/QUERY-BENCHMARK.json"
+            >Recorded query experiment</a
+          >: 20 rows from a 10,000-payment fixture in approximately 5.16 ms,
+          returning 10,048 bytes. One warm local run; not a production capacity
+          estimate.
+        </li>
+      </ul>
+      <h2>Reproduce and inspect</h2>
+      <p>
+        <a
+          href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/docs/INSTALLATION.md"
+          >Installation and PostgreSQL setup</a
+        >
+        ·
+        <a
+          href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/docs/ARCHITECTURE.md"
+          >Architecture and state transitions</a
+        >
+      </p>
+      <h2>Limits</h2>
+      <p>
+        The provider is a simulator with an independent receipt store. No real
+        money moves. External mail and archive receivers are configurable but
+        not provisioned. The public site demonstrates workflow; it does not
+        operate a payment backend. Employer payment experience provides domain
+        context, not benchmark results for this project.
+      </p>
+      <h2>Explore the other projects</h2>
+      <div class="project-links">
+        <a href="relaydesk.html">RelayDesk</a
+        ><a href="sourcedesk.html">SourceDesk</a
+        ><a href="trafficdesk.html">TrafficDesk</a>
+      </div>
+    </main>
+    <footer class="wrap site-footer">
+      <p>Cynthia Owolabi</p>
+      <a href="../index.html#contact">Contact</a
+      ><a href="#main">Back to top ↑</a>
+    </footer>
+  </body>
+</html>

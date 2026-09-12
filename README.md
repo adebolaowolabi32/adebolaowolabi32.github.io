@@ -1,19 +1,11 @@
-# Cynthia Owolabi — portfolio
+# Cynthia Owolabi — engineering portfolio
 
-Personal portfolio highlighting full stack, platform, and applied AI engineering experience.
+Static, accessible portfolio featuring LedgerDesk, RelayDesk, SourceDesk and TrafficDesk, with individual engineering case studies and a downloadable CV.
 
-**Live site:** https://adebolaowolabi32.github.io/
+Live: https://adebolaowolabi32.github.io/
 
-## Preview locally
+## Preview
 
-Run `python3 -m http.server 8000` in this directory, then open http://localhost:8000.
+Run `python3 -m http.server 8080` in this directory and open http://localhost:8080. No build or external service is required. GitHub Pages publishes the master branch.
 
-The site uses static HTML and CSS with no package installation or build step. `index.html` contains the content; `styles.css` contains the responsive layout. Existing images are in `img/`.
-
-## Publishing
-
-GitHub Pages publishes from the root of the `master` branch. Changes to that branch trigger a Pages build.
-
-## Content
-
-Professional experience and outcomes are based on Cynthia's resume. Personal experiments are presented separately from professional work. The earlier-explorations section preserves projects that do not currently have public repository links.
+Project previews use synthetic data. Case studies distinguish browser demonstrations, local backend verification and measured model results. The original CV is preserved outside this repository; the revised PDF is generated from resume.html using Chromium print-to-PDF.

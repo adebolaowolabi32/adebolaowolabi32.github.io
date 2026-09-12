@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RelayDesk case study — Cynthia Owolabi</title>
+    <meta
+      name="description"
+      content="Engineering decisions, failure recovery, evidence and limitations in RelayDesk."
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" href="../favicon.ico" />
+    <link
+      rel="canonical"
+      href="https://adebolaowolabi32.github.io/case-studies/relaydesk.html"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="../index.html">CO<span>.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="../index.html#projects">All projects</a
+        ><a href="../Cynthia_Owolabi_Resume.pdf">CV</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap case">
+      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <h1>RelayDesk</h1>
+      <div class="project-links">
+        <a href="https://adebolaowolabi32.github.io/relaydesk/">Try demo ↗</a
+        ><a href="https://github.com/adebolaowolabi32/relaydesk"
+          >Source code ↗</a
+        >
+      </div>
+      <img
+        src="../img/relaydesk.png"
+        alt="RelayDesk interactive workspace"
+        width="1440"
+        height="1080"
+      />
+      <p class="lede">
+        A release needs to reach clients while a cache is unavailable and
+        another serves corrupt bytes. Delivery is complete only when verified
+        content and durable job state agree.
+      </p>
+      <h2>Two execution paths</h2>
+      <p>
+        The browser simulation makes retries, queues and routing visible across
+        1,000 synthetic clients. A separate Node.js local lab downloads actual
+        HTTP bytes in worker threads, verifies SHA-256 and length, and records
+        attempts in SQLite. The map and local lab have independent state.
+      </p>
+      <h2>Recovery and ownership</h2>
+      <p>
+        A transactional claim assigns a random ownership token and lease. A
+        completion transaction checks that the worker still owns an unexpired
+        claim. If a worker dies, another can recover the job after expiry; a
+        late worker cannot acknowledge completion.
+      </p>
+      <p>
+        The worker and coordinator both verify content. The coordinator
+        synchronizes a temporary file, atomically publishes it under its digest,
+        and then commits completion. A crash between publication and
+        acknowledgement can cause another fetch of the same content. This
+        accepts at-least-once fetching while preventing unverified delivery
+        records.
+      </p>
+      <h2>Tradeoffs</h2>
+      <p>
+        SQLite WAL and short write transactions suit this single-machine lab and
+        make recovery inspectable. They do not establish multi-host
+        coordination. Bounded small transfers let the lab use leases without
+        heartbeats; large artifacts would need streaming and lease renewal. A
+        content-addressed file can serve several clients, so client completions
+        are not a count of unique artifacts.
+      </p>
+      <h2>Try the outage</h2>
+      <ol>
+        <li>Open the demo and take Frankfurt offline.</li>
+        <li>
+          Watch retries and switch routing policies; compare failures, pending
+          work and latency together.
+        </li>
+        <li>
+          Run the strategy comparison to replay identical seeded demand without
+          modifying the active network.
+        </li>
+        <li>
+          For actual bytes, follow the README to start the local engine and use
+          its Local engine panel.
+        </li>
+      </ol>
+      <h2>Measured model experiment</h2>
+      <p>
+        The recorded comparison uses seed 42, 1,000 arrivals, four workers per
+        cache and a Frankfurt outage at second 15. After 240 simulated seconds:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Delivered</th>
+            <th>Failed</th>
+            <th>Pending</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pinned</td>
+            <td>691</td>
+            <td>309</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Failover</td>
+            <td>908</td>
+            <td>0</td>
+            <td>92</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        These are model results. Latency includes queueing for successful
+        requests only; credits are invented units, not cloud prices.
+      </p>
+      <pre>
+npm ci
+npm run experiment
+npm run test:engine</pre>
+      <h2>Evidence and limits</h2>
+      <p>
+        <a
+          href="https://github.com/adebolaowolabi32/relaydesk/blob/main/docs/EXPERIMENT.json"
+          >Full model report</a
+        >
+        ·
+        <a
+          href="https://github.com/adebolaowolabi32/relaydesk/blob/main/tests/engine.test.mjs"
+          >Nine engine integration tests</a
+        >
+        ·
+        <a
+          href="https://github.com/adebolaowolabi32/relaydesk/blob/main/docs/ARCHITECTURE.md"
+          >Architecture</a
+        >
+      </p>
+      <p>
+        The engine tests exercise actual EU 503 responses, US checksum
+        mismatches, clean AP transfers, two coordinators, timeout exhaustion and
+        worker termination. The three cache paths are on one local HTTP server.
+        There are no deployed cloud regions, customer endpoints or production
+        throughput claims. The public demo makes no requests to a local backend.
+      </p>
+      <h2>Explore the other projects</h2>
+      <div class="project-links">
+        <a href="ledgerdesk.html">LedgerDesk</a
+        ><a href="sourcedesk.html">SourceDesk</a
+        ><a href="trafficdesk.html">TrafficDesk</a>
+      </div>
+    </main>
+    <footer class="wrap site-footer">
+      <p>Cynthia Owolabi</p>
+      <a href="../index.html#contact">Contact</a
+      ><a href="#main">Back to top ↑</a>
+    </footer>
+  </body>
+</html>

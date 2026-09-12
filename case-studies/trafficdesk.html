@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TrafficDesk case study — Cynthia Owolabi</title>
+    <meta
+      name="description"
+      content="Engineering decisions, failure recovery, evidence and limitations in TrafficDesk."
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" href="../favicon.ico" />
+    <link
+      rel="canonical"
+      href="https://adebolaowolabi32.github.io/case-studies/trafficdesk.html"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="../index.html">CO<span>.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="../index.html#projects">All projects</a
+        ><a href="../Cynthia_Owolabi_Resume.pdf">CV</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap case">
+      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <h1>TrafficDesk</h1>
+      <div class="project-links">
+        <a href="https://adebolaowolabi32.github.io/trafficdesk/">Try demo ↗</a
+        ><a href="https://github.com/adebolaowolabi32/trafficdesk"
+          >Source code ↗</a
+        >
+      </div>
+      <img
+        src="../img/trafficdesk.png"
+        alt="TrafficDesk interactive workspace"
+        width="1440"
+        height="1080"
+      />
+      <p class="lede">
+        Closing a bridge should change service, queues and passenger
+        journeys—not just change a line’s color on a map.
+      </p>
+      <h2>Domain and constraints</h2>
+      <p>
+        TrafficDesk is an original Lagos-inspired transit simulation informed by
+        the urban transit work described in my CV. It uses fictional routes,
+        synthetic demand and fares, with no employer code or private data. React
+        renders an SVG network driven by a deterministic TypeScript simulation.
+      </p>
+      <h2>One model for operators and passengers</h2>
+      <p>
+        The network starts with six buses across three one-way loop routes and
+        12 stops. Each bus has 32 seats; depot dispatch is capped at 18 buses. A
+        demo ticket represents a passenger inside the same queue and boarding
+        accounting used by the operator view. Boarding records revenue once, and
+        arrival removes that passenger from the bus.
+      </p>
+      <p>
+        A bridge closure allows a bus already crossing to finish its leg, then
+        holds later departures at University. Opening the alternate route
+        resumes departures along a longer path. Breakdowns keep passengers
+        aboard until repair.
+      </p>
+      <h2>Try an intervention</h2>
+      <ol>
+        <li>Start Rush hour and select Marina Central. Observe the queue.</li>
+        <li>
+          Dispatch a reserve bus and watch capacity-limited boarding reduce the
+          queue.
+        </li>
+        <li>
+          Close the bridge, then open the alternate route to restore departures.
+        </li>
+        <li>
+          Switch to Take a ride, get a ticket and follow the passenger to
+          arrival.
+        </li>
+        <li>
+          Open City pulse and compare six versus nine buses under the same
+          seeded 120-second demand.
+        </li>
+      </ol>
+      <h2>Correctness and design decisions</h2>
+      <p>
+        Passenger conservation and capacity are tested across demand, boarding,
+        incidents and repair. Seeded demand and isolated comparison states make
+        the intervention repeatable without changing the active city. Time
+        pauses when the tab is hidden; reduced-motion preferences start the
+        simulation paused. The map supports keyboard selection.
+      </p>
+      <p>
+        Using a browser-local reducer keeps the demonstration free to run and
+        easy to inspect. It also means refresh resets state. A backend would add
+        persistence and shared operation, but neither is necessary to
+        demonstrate these simulation decisions.
+      </p>
+      <h2>Evidence</h2>
+      <p>
+        Ten simulation tests cover conservation, deterministic replay,
+        closure/detour behavior, complete tickets, fleet limits and causal
+        intervention comparison. Four browser scenarios cover controls, complete
+        rider journeys, responsive and keyboard behavior, and reduced motion
+        with no external data services.
+      </p>
+      <p>
+        <a
+          href="https://github.com/adebolaowolabi32/trafficdesk/tree/main/tests"
+          >Tests</a
+        >
+        ·
+        <a
+          href="https://github.com/adebolaowolabi32/trafficdesk/blob/main/docs/ARCHITECTURE.md"
+          >Model architecture</a
+        >
+      </p>
+      <pre>
+npm ci
+npm test
+npm run build
+npm run test:e2e</pre>
+      <h2>Limits</h2>
+      <p>
+        This is not a calibrated transport model. Vehicles have constant speed;
+        there is no road congestion, collision avoidance, transfer planning or
+        real fare settlement. Reserve dispatch places a bus at a selected stop
+        immediately. Map figures show a capped sample; numeric badges carry
+        actual counts. Employer outcomes remain separate from project results.
+      </p>
+      <h2>Explore the other projects</h2>
+      <div class="project-links">
+        <a href="ledgerdesk.html">LedgerDesk</a
+        ><a href="relaydesk.html">RelayDesk</a
+        ><a href="sourcedesk.html">SourceDesk</a>
+      </div>
+    </main>
+    <footer class="wrap site-footer">
+      <p>Cynthia Owolabi</p>
+      <a href="../index.html#contact">Contact</a
+      ><a href="#main">Back to top ↑</a>
+    </footer>
+  </body>
+</html>
