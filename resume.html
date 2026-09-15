@@ -20,6 +20,13 @@
       @page {
         size: Letter;
         margin: 35pt 49pt 38pt;
+        @bottom-center {
+          content: "Cynthia Owolabi | Senior Software Engineer";
+          font:
+            8pt OriginalArial,
+            Arial,
+            sans-serif;
+        }
       }
       * {
         box-sizing: border-box;
@@ -139,6 +146,11 @@
           .contact {
             overflow-wrap: anywhere;
           }
+        }
+      }
+      @media print {
+        footer {
+          display: none;
         }
       }
     </style>
