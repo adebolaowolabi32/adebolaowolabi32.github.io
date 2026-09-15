@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cynthia Owolabi | Resume</title>
+    <style>
+
+
+      @page {
+        size: Letter;
+        margin: 35pt 49pt 38pt;
+        @bottom-center {
+          content: "Cynthia Owolabi | Senior Software Engineer";
+          font:
+            8pt 
+            Arial,
+            sans-serif;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font:
+          11pt/1.18 
+          Arial,
+          "Liberation Sans",
+          sans-serif;
+        color: #000;
+        margin: 0;
+      }
+      a {
+        color: #1154cc;
+        text-decoration: underline;
+      }
+      header {
+        text-align: center;
+      }
+      h1 {
+        font-size: 14pt;
+        margin: 0;
+        padding: 0 0 6pt;
+        border-bottom: 1pt solid #4285f4;
+      }
+      .headline {
+        font-size: 12pt;
+        font-weight: bold;
+        margin: 2pt 0 5pt;
+      }
+      .contact {
+        margin: 0 0 8pt;
+      }
+      h2 {
+        font-size: 11pt;
+        margin: 10pt 0 4pt;
+        padding-bottom: 3pt;
+        border-bottom: 1pt solid #808080;
+        break-after: avoid;
+      }
+      .skills {
+        display: grid;
+        grid-template-columns: 82pt 1fr;
+        row-gap: 2pt;
+        margin: 0;
+      }
+      .skills dt {
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      .skills dd {
+        margin: 0;
+      }
+      h3 {
+        font-size: 11pt;
+        margin: 5pt 0 0;
+        break-after: avoid;
+      }
+      .date {
+        font-weight: bold;
+        margin: 1pt 0;
+        break-after: avoid;
+      }
+      .location {
+        margin: 0 0 3pt;
+        break-after: avoid;
+      }
+      ul {
+        padding-left: 13pt;
+        margin: 0 0 4pt;
+      }
+      li {
+        padding-left: 0;
+        margin: 0 0 1.5pt;
+        break-inside: avoid;
+      }
+      p {
+        margin: 0 0 3pt;
+      }
+      .education {
+        break-inside: avoid;
+      }
+      footer {
+        position: fixed;
+        bottom: -20pt;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8pt;
+      }
+      @media screen {
+        body {
+          background: #eee;
+        }
+        .sheet {
+          max-width: 612pt;
+          margin: 24px auto;
+          padding: 35pt 49pt;
+          background: white;
+        }
+        footer {
+          position: static;
+          margin-top: 18pt;
+        }
+        @media (max-width: 650px) {
+          .sheet {
+            margin: 0;
+            padding: 20px;
+          }
+          .skills {
+            grid-template-columns: 1fr;
+          }
+          .skills dd {
+            margin-bottom: 4pt;
+          }
+          .contact {
+            overflow-wrap: anywhere;
+          }
+        }
+      }
+      @media print {
+        footer {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header>
+        <h1>CYNTHIA OWOLABI</h1>
+        <p class="headline">
+          Senior Full Stack Engineer
+        </p>
+        <p class="contact">
+          <a href="mailto:adebolaowolabi32@gmail.com"
+            >adebolaowolabi32@gmail.com</a
+          >
+          | <a href="tel:+2348160275523">+2348160275523</a> |
+          <a href="https://linkedin.com/in/adebolaowolabi"
+            >linkedin.com/in/adebolaowolabi</a
+          >
+          |<br /><a href="https://github.com/adebolaowolabi32"
+            >https://github.com/adebolaowolabi32</a
+          >
+        </p>
+      </header>
+      <h2>TECHNICAL SKILLS</h2>
+      <dl class="skills">
+        <dt>Backend</dt>
+        <dd>
+          Node.js, NestJS, Django, FastAPI, Laravel, Spring, REST APIs, GraphQL,
+          Kafka
+        </dd>
+        <dt>Frontend</dt>
+        <dd>React, Next.js, Angular, Tailwind CSS, Redux</dd>
+        <dt>Languages</dt>
+        <dd>
+          Python, TypeScript, JavaScript, Java, C#, Go, PHP, Kotlin, Shell
+        </dd>
+        <dt>Databases</dt>
+        <dd>
+          PostgreSQL, MySQL, MS SQL Server, Redis, Cassandra, MongoDB, ArangoDB
+        </dd>
+        <dt>AI</dt>
+        <dd>LLM APIs, LangChain, LangGraph, RAG, Pinecone vector database</dd>
+        <dt>Cloud/DevOps</dt>
+        <dd>AWS, Azure, GCP, Docker, Kubernetes, Terraform, Jenkins</dd>
+      </dl>
+      <h2>PROFESSIONAL EXPERIENCE</h2>
+      <article>
+        <h3>Duplo | Senior Full Stack Engineer</h3>
+        <p class="date">Jul 2025 - Present</p>
+        <p class="location">Nigeria | Hybrid | Full-time</p>
+        <ul>
+          <li>
+            Architect and develop internal administration systems using Next.js,
+            TypeScript, NestJS and PostgreSQL, consolidating business and
+            transaction data with boundary normalization and
+            partial-availability handling.
+          </li>
+          <li>
+            Implement Xero accounting integrations for expenses, bills,
+            invoices, payments, contacts and taxes, including synchronization
+            jobs and endpoints; build partner registries and feature flags for
+            partner-specific capabilities.
+          </li>
+          <li>
+            Implement liquidity transfers, transaction-status and balance
+            queries, and Wema Bank payouts, with partner-specific
+            payment-provider and currency provisioning.
+          </li>
+          <li>
+            Deliver multi-country compliance workflows with country-specific
+            validation, resubmission of rejected fields and business activation
+            controls.
+          </li>
+          <li>
+            Implement role-based access and maker-checker approvals for
+            sensitive administrative actions.
+          </li>
+          <li>
+            Build external-service mocks for accounting and payment
+            integrations.
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h3>Bitso | Senior Software Engineer</h3>
+        <p class="date">Apr 2023 - Jul 2025</p>
+        <p class="location">Mexico | Remote | Contract</p>
+        <ul>
+          <li>
+            Developed and integrated an AI customer-support assistant using LLM
+            APIs and LangGraph to handle queries through natural-language
+            understanding and generation.
+          </li>
+          <li>
+            Designed LLM-agent workflows for transaction risk analysis, using AI
+            models to identify suspicious patterns and flag high-risk
+            transactions.
+          </li>
+          <li>
+            Applied semantic embeddings, vector databases and
+            Retrieval-Augmented Generation to improve transaction-data retrieval
+            and support risk-analysis workflows.
+          </li>
+          <li>
+            Shipped high-performance code for high-growth markets serving
+            hundreds of thousands of users using Java, PHP and Laravel
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h3>Microsoft | Senior Software Engineer</h3>
+        <p class="date">Dec 2021 - Feb 2023</p>
+        <p class="location">Nigeria | Hybrid | Full-time</p>
+        <ul>
+          <li>
+            Built a web application with distributed-system architecture to
+            improve performance, scalability and fault tolerance using C#,
+            Python, TypeScript and Node.js.
+          </li>
+          <li>
+            Automated runtime and documentation issue/bug logging using Azure
+            DevOps to manage background tasks and workflows, ensuring
+            scalability and efficient operation, using Azure Cloud, Azure
+            Service Bus, Azure Durable Orchestration Functions, Azure Worker
+            Service and Application Insights.
+          </li>
+          <li>
+            Reduced API scan completion time from 15 hours to 5 hours through
+            automated processing.
+          </li>
+          <li>Implement CI &amp; CD pipelines using Azure</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Indeed | Senior Software Engineer</h3>
+        <p class="date">Jun 2021 - Sep 2022</p>
+        <p class="location">United States | Remote | Contract</p>
+        <ul>
+          <li>
+            Managed and upgraded an artifact-distribution system using Java, Go,
+            Cassandra, MySQL, MongoDB, Consul, ZooKeeper, Docker and Kubernetes.
+          </li>
+          <li>
+            Migrated services from on-premise infrastructure to AWS using Python
+            and upgraded services to support Kubernetes.
+          </li>
+          <li>Provided technical platform maintenance and support.</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Interswitch Group | Software Engineer</h3>
+        <p class="date">May 2018 - Nov 2021</p>
+        <p class="location">Nigeria | Hybrid | Full-time</p>
+        <ul>
+          <li>
+            Developed frontend and backend systems for an urban mass-transit
+            solution supporting automated fare collection, ticketing and
+            real-time fleet and vehicle tracking.
+          </li>
+          <li>
+            Demoed a web version within six months, contributing to the
+            company&#x27;s first contract with the Lagos Metropolitan Area
+            Transport Authority (LAMATA).
+          </li>
+          <li>
+            Decoupled and refactored infrastructure from an Enterprise Service
+            Bus to microservices, increasing uptime from 88% to 99.7% and
+            raising sigma level from 3σ to 5σ.
+          </li>
+          <li>
+            Developed an API gateway providing analytics, enterprise-grade
+            security and API management, reducing security breaches by 23% and
+            increasing customer satisfaction by 21%.
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h3>Zone | Software Engineer</h3>
+        <p class="date">Jan 2017 - Mar 2018</p>
+        <p class="location">Nigeria | On-site | Full-time</p>
+        <ul>
+          <li>
+            Architected, planned and delivered software solutions and enhanced
+            product implementations for the Deja-Vu Platform.
+          </li>
+          <li>
+            Performed code reviews, unit and integration testing, and produced
+            technical documentation and system specifications.
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h3>
+          ElectroHyve Research Institute of Technology | Embedded Systems
+          Engineer
+        </h3>
+        <p class="date">Jun 2015 - Nov 2015</p>
+        <p class="location">Nigeria | On-site | Internship</p>
+        <ul>
+          <li>
+            Developed and tested hardware components and electronic circuits,
+            including integration testing with external computer systems.
+          </li>
+        </ul>
+      </article>
+      <section class="education">
+        <h2>EDUCATION</h2>
+        <p>
+          The Federal University of Technology, Akure |
+          <strong>First Class Honours, CGPA 4.53/5</strong>
+        </p>
+        <p><strong>Electrical &amp; Electronics Engineering (BE)</strong></p>
+        <h2>ACHIEVEMENTS</h2>
+        <ul>
+          <li>Gold Medal, American Mathematics Competition (AMC), 2011.</li>
+          <li>
+            Bronze Medal, 7th International Junior Science Olympiad (IJSO),
+            2010.
+          </li>
+          <li>
+            Represented Nigeria at the 52nd International Mathematical Olympiad
+            (IMO), 2011.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer>Cynthia Owolabi | Senior Software Engineer</footer>
+  </body>
+</html>
