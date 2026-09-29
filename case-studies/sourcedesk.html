@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SourceDesk case study — Cynthia Owolabi</title>
+    <title>SourceDesk case study | Cynthia Owolabi</title>
     <meta
       name="description"
-      content="Engineering decisions, failure recovery, evidence and limitations in SourceDesk."
+      content="How SourceDesk uses payment guides to answer questions, and what its tests caught."
     />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../favicon.ico" />
@@ -25,7 +25,7 @@
       </nav>
     </header>
     <main id="main" class="wrap case">
-      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <p class="eyebrow">Project notes / Cynthia Owolabi</p>
       <h1>SourceDesk</h1>
       <div class="project-links">
         <a href="https://adebolaowolabi32.github.io/sourcedesk/">Try demo ↗</a
@@ -40,63 +40,66 @@
         height="1080"
       />
       <p class="lede">
-        A support answer needs inspectable evidence and a way to hand off
-        questions it cannot responsibly answer. A valid quotation alone does not
-        establish that a generated claim follows from it.
+        An early SourceDesk answer implied it knew what had happened to
+        someone’s payment. It only had documentation. That mistake shaped how
+        the app handles account questions and how I reviewed the generated
+        answers.
       </p>
-      <h2>Problem and implementation</h2>
+      <h2>Answering from the guides</h2>
       <p>
-        SourceDesk answers questions over 12 original synthetic payment guides.
-        Its offline path retrieves and renders exact passages. Its optional live
-        path uses embeddings, pgvector cosine retrieval and structured
-        model-generated claims paired with supporting quotations.
-        Account-specific and unsupported requests have explicit handoff paths.
+        SourceDesk searches 12 fictional payment guides. The default mode
+        returns matching passages directly. With GPT and pgvector enabled, it
+        writes an answer using retrieved passages and includes quotes you can
+        check. Questions about a specific account go to review, as do questions
+        the guides cannot answer.
       </p>
-      <h2>Decisions and tradeoffs</h2>
+      <h2>Keeping citations tied to the answer</h2>
       <p>
-        Index generations are bound to corpus content and embedding model and
-        replaced atomically, preventing a partially refreshed corpus from
-        becoming the active index. Saved answers preserve source snapshots so
-        later document changes do not silently rewrite their citations.
+        Each search index records which documents and embedding model it was
+        built from. A new index becomes active only after indexing finishes.
+        Saved answers also keep a copy of their source passages, so editing a
+        guide does not change the evidence attached to an old answer.
       </p>
       <p>
-        The small corpus uses exact vector search. This makes retrieval
-        straightforward to inspect, but provides no evidence of large-scale
-        retrieval performance. Exact quote checks reject invented passages and
-        source IDs; they cannot determine semantic relevance, entailment or
-        whether a source is itself correct.
+        For this small set of guides, I used exact vector search. The app checks
+        that each quoted passage exists in the retrieved source. That catches
+        invented quotations. It cannot tell whether the model has interpreted a
+        real passage correctly, which still needs review.
       </p>
-      <h2>A failure that changed the implementation</h2>
+      <h2>What the first tests caught</h2>
       <p>
-        The initial authored regression run passed 38 of 40 cases. A role
-        paraphrase abstained unexpectedly, and an account-specific request
-        received general documentation. Normalization and scope handling fixes
-        raised that same visible suite to 40 of 40. During live smoke review, a
-        generated claim implied knowledge of an account; the prompt was
-        strengthened to describe documented behavior conditionally.
+        The first run passed 38 of 40 questions. It missed a paraphrased role
+        name and answered a question about someone’s account with general
+        documentation. I fixed the normalization and scope checks, then reran
+        the same suite: 40 of 40 passed.
       </p>
-      <h2>Try the boundary</h2>
+      <p>
+        A separate live test caught the account-specific wording mentioned
+        above. I changed the prompt to describe what the documentation says
+        conditionally, rather than imply knowledge of a particular payment.
+      </p>
+      <h2>Try an account question</h2>
       <p>
         In the demo, ask a documentation question, inspect its quoted source,
         then ask about your own missing funds. Compare the answer and handoff
         paths. The hosted preview uses prepared synthetic responses; it does not
         call a paid model.
       </p>
-      <h2>What the evaluation establishes</h2>
+      <h2>Reading the test results</h2>
       <ul>
         <li>
-          40/40 visible authored regression cases passed after fixes. The
-          inspected “holdout” subset is now regression data, not an independent
-          holdout.
+          All 40 development questions pass after fixes. I saw the full set
+          during development, including the subset originally called “holdout,”
+          so these results cannot measure performance on unseen questions.
         </li>
         <li>
-          30 real vectors were indexed and five live smoke cases passed. This
-          checks connectivity, retrieval and output structure, not general
-          answer quality.
+          The live test indexed 30 passages and passed five smoke cases. It
+          confirms that the API and retrieval path work together. Five cases are
+          too few to judge general answer quality.
         </li>
         <li>
-          Human inspection identified a wording issue; no independently graded
-          semantic-support score is claimed.
+          Reviewing the answers caught a wording problem that the automated
+          checks missed. Claim support has not been independently graded.
         </li>
       </ul>
       <p>
@@ -118,19 +121,16 @@
       <pre>
 npm ci
 npm run evaluate</pre>
+      <p>This runs the offline regression suite without API calls.</p>
+      <h2>What still needs testing</h2>
       <p>
-        The command above runs the offline regression suite. No new paid
-        evaluation was needed for this case study.
+        The app has only been tested with this small collection of guides. The
+        next useful evaluation would use questions written independently of the
+        implementation, with people checking whether each answer follows from
+        its sources and whether a handoff was needed. That work is still
+        outstanding.
       </p>
-      <h2>Limits and next evidence</h2>
-      <p>
-        This is a small curated corpus, not arbitrary document ingestion or a
-        production support service. An independently authored unseen evaluation,
-        with separate human judgments for claim support and abstention, remains
-        future work. It would be misleading to relabel more development-authored
-        questions as independent evidence.
-      </p>
-      <h2>Explore the other projects</h2>
+      <h2>Other projects</h2>
       <div class="project-links">
         <a href="ledgerdesk.html">LedgerDesk</a
         ><a href="relaydesk.html">RelayDesk</a

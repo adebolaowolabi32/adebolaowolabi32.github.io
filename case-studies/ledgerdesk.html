@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>LedgerDesk case study — Cynthia Owolabi</title>
+    <title>LedgerDesk case study | Cynthia Owolabi</title>
     <meta
       name="description"
-      content="Engineering decisions, failure recovery, evidence and limitations in LedgerDesk."
+      content="How LedgerDesk checks a payment after the provider accepts it but the response times out."
     />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../favicon.ico" />
@@ -25,7 +25,7 @@
       </nav>
     </header>
     <main id="main" class="wrap case">
-      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <p class="eyebrow">Project notes / Cynthia Owolabi</p>
       <h1>LedgerDesk</h1>
       <div class="project-links">
         <a href="https://adebolaowolabi32.github.io/payment-operations-console/"
@@ -42,19 +42,22 @@
         height="1080"
       />
       <p class="lede">
-        A provider can accept a payment and lose the response. Treating that
-        timeout as a failure risks paying twice; treating it as success invents
-        certainty.
+        The provider has accepted a payment, but the response never arrives. The
+        operator sees a timeout. I built LedgerDesk around what happens next:
+        checking for the original transfer before anyone tries to pay again.
       </p>
-      <h2>Problem and constraints</h2>
+      <h2>The payment workflow</h2>
       <p>
-        LedgerDesk models an operations team creating, independently approving
-        and tracking payments. The backend must preserve organization
-        boundaries, survive worker crashes and keep an inspectable history. Its
-        public preview is a synthetic browser demo; PostgreSQL workers and the
-        HTTP provider run locally.
+        One person creates a payment and another approves it. After submission,
+        the backend records each processing attempt so an operator can see what
+        happened. A worker can stop at any point, including while the provider
+        is accepting a transfer.
       </p>
-      <h2>The central decision: preserve uncertainty</h2>
+      <p>
+        The public preview simulates this workflow in your browser. To exercise
+        the database and HTTP provider, run the backend locally.
+      </p>
+      <h2>A timeout goes to reconciliation</h2>
       <p>
         Approval commits the payment change, audit event and due job in one
         PostgreSQL transaction. Workers claim with
@@ -77,14 +80,13 @@
           payment.
         </li>
       </ol>
-      <h2>Why the boundaries matter</h2>
+      <h2>Handling an interrupted worker</h2>
       <p>
-        Blind retries cannot distinguish a lost response from a rejected
-        payment. A local lease alone also cannot prevent an old worker from
-        completing a remote call. LedgerDesk combines owner/version/expiry
-        checks for local writes with stable provider idempotency keys for remote
-        submission. It offers durable state and reconciliation, without claiming
-        exactly-once network delivery.
+        A retry needs the original provider idempotency key, even if a different
+        worker takes over. The previous worker may still finish its network call
+        after losing its claim. LedgerDesk checks ownership and expiry before
+        accepting local writes; the provider key prevents duplicate transfers
+        when calls overlap. Network requests may still happen more than once.
       </p>
       <p>
         Expired claims enter reconciliation even when the interrupted worker
@@ -92,7 +94,7 @@
         bytes and deduplicate event IDs; stale events cannot overwrite a
         terminal result.
       </p>
-      <h2>Try the failure in two minutes</h2>
+      <h2>Try a lost response</h2>
       <p>
         Open the demo and enter the operations workspace. Under System health,
         set Simulator behavior to the acceptance-timeout option. Open Approvals,
@@ -101,7 +103,7 @@
         shows the lookup. For actual network evidence, run the repository’s
         provider integration test using the installation guide below.
       </p>
-      <h2>Evidence</h2>
+      <h2>Tests and a query measurement</h2>
       <ul>
         <li>
           <a
@@ -132,7 +134,7 @@
           estimate.
         </li>
       </ul>
-      <h2>Reproduce and inspect</h2>
+      <h2>Run it locally</h2>
       <p>
         <a
           href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/docs/INSTALLATION.md"
@@ -144,15 +146,14 @@
           >Architecture and state transitions</a
         >
       </p>
-      <h2>Limits</h2>
+      <h2>Demo setup</h2>
       <p>
-        The provider is a simulator with an independent receipt store. No real
-        money moves. External mail and archive receivers are configurable but
-        not provisioned. The public site demonstrates workflow; it does not
-        operate a payment backend. Employer payment experience provides domain
-        context, not benchmark results for this project.
+        The provider simulator has its own receipt store, and no real money
+        moves. Email delivery and audit export need external receivers that are
+        not set up here. The project’s measurements come from local tests; they
+        do not describe systems I worked on for an employer.
       </p>
-      <h2>Explore the other projects</h2>
+      <h2>Other projects</h2>
       <div class="project-links">
         <a href="relaydesk.html">RelayDesk</a
         ><a href="sourcedesk.html">SourceDesk</a

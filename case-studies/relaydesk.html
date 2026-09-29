@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>RelayDesk case study — Cynthia Owolabi</title>
+    <title>RelayDesk case study | Cynthia Owolabi</title>
     <meta
       name="description"
-      content="Engineering decisions, failure recovery, evidence and limitations in RelayDesk."
+      content="How RelayDesk recovers file deliveries after a worker stops or a cache goes offline."
     />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../favicon.ico" />
@@ -25,7 +25,7 @@
       </nav>
     </header>
     <main id="main" class="wrap case">
-      <p class="eyebrow">Cynthia Owolabi / Engineering case study</p>
+      <p class="eyebrow">Project notes / Cynthia Owolabi</p>
       <h1>RelayDesk</h1>
       <div class="project-links">
         <a href="https://adebolaowolabi32.github.io/relaydesk/">Try demo ↗</a
@@ -40,18 +40,20 @@
         height="1080"
       />
       <p class="lede">
-        A release needs to reach clients while a cache is unavailable and
-        another serves corrupt bytes. Delivery is complete only when verified
-        content and durable job state agree.
+        Take Frankfurt offline halfway through a release. Some clients can
+        switch to another cache; others will wait or fail, depending on the
+        routing policy. RelayDesk lets you compare those choices under the same
+        demand.
       </p>
-      <h2>Two execution paths</h2>
+      <h2>The map and the local engine</h2>
       <p>
-        The browser simulation makes retries, queues and routing visible across
-        1,000 synthetic clients. A separate Node.js local lab downloads actual
-        HTTP bytes in worker threads, verifies SHA-256 and length, and records
-        attempts in SQLite. The map and local lab have independent state.
+        The map simulates deliveries to 1,000 clients. I built a separate
+        Node.js engine to test recovery with actual HTTP transfers. It checks
+        downloaded files against their SHA-256 digest and expected length, then
+        records the result in SQLite. The engine and the map run independent
+        workloads.
       </p>
-      <h2>Recovery and ownership</h2>
+      <h2>When a worker stops</h2>
       <p>
         A transactional claim assigns a random ownership token and lease. A
         completion transaction checks that the worker still owns an unexpired
@@ -59,21 +61,21 @@
         late worker cannot acknowledge completion.
       </p>
       <p>
-        The worker and coordinator both verify content. The coordinator
-        synchronizes a temporary file, atomically publishes it under its digest,
-        and then commits completion. A crash between publication and
-        acknowledgement can cause another fetch of the same content. This
-        accepts at-least-once fetching while preventing unverified delivery
-        records.
+        Both the worker and the coordinator check the downloaded content. The
+        coordinator writes a temporary file, syncs it to disk and atomically
+        publishes it under its digest. Only then does it mark the job complete.
+        If it crashes between those steps, the next worker may fetch the file
+        again. That extra fetch is acceptable; recording a delivery before the
+        file is verified is not.
       </p>
-      <h2>Tradeoffs</h2>
+      <h2>Why the engine uses SQLite</h2>
       <p>
-        SQLite WAL and short write transactions suit this single-machine lab and
-        make recovery inspectable. They do not establish multi-host
-        coordination. Bounded small transfers let the lab use leases without
-        heartbeats; large artifacts would need streaming and lease renewal. A
-        content-addressed file can serve several clients, so client completions
-        are not a count of unique artifacts.
+        SQLite keeps the engine easy to run on one machine. Short transactions
+        let multiple workers claim jobs, and the queue survives a restart. I
+        have not tested coordination across hosts. The demo files are small
+        enough to transfer within a fixed lease; larger files would need
+        streaming and lease renewal. Several client jobs can point to the same
+        stored file.
       </p>
       <h2>Try the outage</h2>
       <ol>
@@ -91,7 +93,7 @@
           its Local engine panel.
         </li>
       </ol>
-      <h2>Measured model experiment</h2>
+      <h2>What happened in the simulation</h2>
       <p>
         The recorded comparison uses seed 42, 1,000 arrivals, four workers per
         cache and a Frankfurt outage at second 15. After 240 simulated seconds:
@@ -128,7 +130,7 @@
 npm ci
 npm run experiment
 npm run test:engine</pre>
-      <h2>Evidence and limits</h2>
+      <h2>Testing the local engine</h2>
       <p>
         <a
           href="https://github.com/adebolaowolabi32/relaydesk/blob/main/docs/EXPERIMENT.json"
@@ -146,13 +148,13 @@ npm run test:engine</pre>
         >
       </p>
       <p>
-        The engine tests exercise actual EU 503 responses, US checksum
-        mismatches, clean AP transfers, two coordinators, timeout exhaustion and
-        worker termination. The three cache paths are on one local HTTP server.
-        There are no deployed cloud regions, customer endpoints or production
-        throughput claims. The public demo makes no requests to a local backend.
+        The engine tests include an EU cache returning HTTP 503 and a US cache
+        serving a file with the wrong checksum. Jobs can recover through the AP
+        cache. Other tests stop a worker mid-job or run two coordinators against
+        the same queue. All cache endpoints are on one local HTTP server. The
+        public demo runs entirely in the browser.
       </p>
-      <h2>Explore the other projects</h2>
+      <h2>Other projects</h2>
       <div class="project-links">
         <a href="ledgerdesk.html">LedgerDesk</a
         ><a href="sourcedesk.html">SourceDesk</a
