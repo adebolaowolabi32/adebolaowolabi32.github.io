@@ -50,21 +50,18 @@
         SourceDesk searches 12 fictional payment guides. The default mode
         returns matching passages directly. With GPT and pgvector enabled, it
         writes an answer using retrieved passages and includes quotes you can
-        check. Questions about a specific account go to review, as do questions
-        the guides cannot answer.
+        check. Account-specific questions and questions outside the guides' coverage go to review.
       </p>
       <h2>Keeping citations tied to the answer</h2>
       <p>
         Each search index records which documents and embedding model it was
         built from. A new index becomes active only after indexing finishes.
-        Saved answers also keep a copy of their source passages, so editing a
-        guide does not change the evidence attached to an old answer.
+        Saved answers retain a copy of their source passages through later guide edits.
       </p>
       <p>
         For this small set of guides, I used exact vector search. The app checks
         that each quoted passage exists in the retrieved source. That catches
-        invented quotations. It cannot tell whether the model has interpreted a
-        real passage correctly, which still needs review.
+        invented quotations. Reviewers still need to check whether the quoted passage supports the model's interpretation.
       </p>
       <h2>What the first tests caught</h2>
       <p>
@@ -75,22 +72,20 @@
       </p>
       <p>
         A separate live test caught the account-specific wording mentioned
-        above. I changed the prompt to describe what the documentation says
-        conditionally, rather than imply knowledge of a particular payment.
+        above. I changed the prompt to describe the documentation's conditions explicitly.
       </p>
       <h2>Try an account question</h2>
       <p>
         In the demo, ask a documentation question, inspect its quoted source,
         then ask about your own missing funds. Compare the answer and handoff
-        paths. The hosted preview uses prepared synthetic responses; it does not
-        call a paid model.
+        paths. The hosted preview runs recorded synthetic responses in your browser.
       </p>
       <h2>Reading the test results</h2>
       <ul>
         <li>
           All 40 development questions pass after fixes. I saw the full set
           during development, including the subset originally called “holdout,”
-          so these results cannot measure performance on unseen questions.
+          so these results track regression performance on the development set.
         </li>
         <li>
           The live test indexed 30 passages and passed five smoke cases. It
@@ -99,7 +94,7 @@
         </li>
         <li>
           Reviewing the answers caught a wording problem that the automated
-          checks missed. Claim support has not been independently graded.
+          checks missed. Independent review of claim support remains outstanding.
         </li>
       </ul>
       <p>
@@ -121,7 +116,7 @@
       <pre>
 npm ci
 npm run evaluate</pre>
-      <p>This runs the offline regression suite without API calls.</p>
+      <p>This runs the local regression suite.</p>
       <h2>What still needs testing</h2>
       <p>
         The app has only been tested with this small collection of guides. The
