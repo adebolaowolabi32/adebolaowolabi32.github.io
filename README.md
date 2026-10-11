@@ -2,7 +2,7 @@
 
 I’m Cynthia, a Senior Full Stack Engineer. This is the source for my portfolio.
 
-The site has demos and case studies for LedgerDesk, RelayDesk, SourceDesk and TrafficDesk. You can also download a CV for the role you’re hiring for.
+The site includes Fieldnotes Academy, the published CSV Kit PHP package, and demos and case studies for LedgerDesk, RelayDesk, SourceDesk and TrafficDesk. You can also download a CV for the role you’re hiring for.
 
 [Live portfolio](https://adebolaowolabi32.github.io/) · [Choose a CV](https://adebolaowolabi32.github.io/resume.html)
 
