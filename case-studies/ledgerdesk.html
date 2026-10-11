@@ -91,8 +91,7 @@
       <p>
         Expired claims enter reconciliation even when the interrupted worker
         never recorded an outcome. Signed callbacks verify original request
-        bytes and deduplicate event IDs; stale events cannot overwrite a
-        terminal result.
+        bytes and deduplicate event IDs; terminal results remain unchanged when stale events arrive.
       </p>
       <h2>Try a lost response</h2>
       <p>
@@ -130,8 +129,7 @@
             href="https://github.com/adebolaowolabi32/payment-operations-console/blob/main/docs/QUERY-BENCHMARK.json"
             >Recorded query experiment</a
           >: 20 rows from a 10,000-payment fixture in approximately 5.16 ms,
-          returning 10,048 bytes. One warm local run; not a production capacity
-          estimate.
+          returning 10,048 bytes. Measured in one warm local run.
         </li>
       </ul>
       <h2>Run it locally</h2>
@@ -148,10 +146,7 @@
       </p>
       <h2>Demo setup</h2>
       <p>
-        The provider simulator has its own receipt store, and no real money
-        moves. Email delivery and audit export need external receivers that are
-        not set up here. The project’s measurements come from local tests; they
-        do not describe systems I worked on for an employer.
+        The provider simulator records fictional transfers in its own receipt store. Configure external receivers for email delivery and audit export. The measurements come from this project's local tests.
       </p>
       <h2>Other projects</h2>
       <div class="project-links">
