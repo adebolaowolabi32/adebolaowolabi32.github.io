@@ -57,22 +57,19 @@
       <p>
         A transactional claim assigns a random ownership token and lease. A
         completion transaction checks that the worker still owns an unexpired
-        claim. If a worker dies, another can recover the job after expiry; a
-        late worker cannot acknowledge completion.
+        claim. If a worker dies, another can recover the job after expiry; completion requires an unexpired claim.
       </p>
       <p>
         Both the worker and the coordinator check the downloaded content. The
         coordinator writes a temporary file, syncs it to disk and atomically
         publishes it under its digest. Only then does it mark the job complete.
         If it crashes between those steps, the next worker may fetch the file
-        again. That extra fetch is acceptable; recording a delivery before the
-        file is verified is not.
+        again. Recovery may repeat the fetch; completion requires a verified file.
       </p>
       <h2>Why the engine uses SQLite</h2>
       <p>
         SQLite keeps the engine easy to run on one machine. Short transactions
-        let multiple workers claim jobs, and the queue survives a restart. I
-        have not tested coordination across hosts. The demo files are small
+        let multiple workers claim jobs, and the queue survives a restart. Coordination across hosts still needs testing. The demo files are small
         enough to transfer within a fixed lease; larger files would need
         streaming and lease renewal. Several client jobs can point to the same
         stored file.
@@ -85,8 +82,7 @@
           work and latency together.
         </li>
         <li>
-          Run the strategy comparison to replay identical seeded demand without
-          modifying the active network.
+          Run the strategy comparison on separate copies of the same seeded network.
         </li>
         <li>
           For actual bytes, follow the README to start the local engine and use
@@ -124,7 +120,7 @@
       </table>
       <p>
         These are model results. Latency includes queueing for successful
-        requests only; credits are invented units, not cloud prices.
+        requests only; credits are fictional units for comparing strategies.
       </p>
       <pre>
 npm ci
